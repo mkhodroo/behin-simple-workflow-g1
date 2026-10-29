@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('beams_token')->nullable()->after('role_id');
-        });
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->string('beams_token')->nullable()->after('role_id');
+        // });
 
     }
 
