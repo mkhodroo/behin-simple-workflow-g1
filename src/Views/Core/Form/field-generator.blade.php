@@ -258,7 +258,7 @@
         msg.innerHTML = '';
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '{{ route('simpleWorkflow.file-uploader.upload') }}', true);
+        xhr.open('POST', '{{ route('file.upload') }}', true);
         xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
 
         xhr.upload.onprogress = function(e) {
