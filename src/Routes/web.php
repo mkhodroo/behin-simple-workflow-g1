@@ -4,7 +4,6 @@ use Behin\SimpleWorkflow\Controllers\Core\ConditionController;
 use Behin\SimpleWorkflow\Controllers\Core\DoneInboxController;
 use Behin\SimpleWorkflow\Controllers\Core\EntityController;
 use Behin\SimpleWorkflow\Controllers\Core\FieldController;
-use Behin\SimpleWorkflow\Controllers\Core\FileUploaderController;
 use Behin\SimpleWorkflow\Controllers\Core\FormController;
 use Behin\SimpleWorkflow\Controllers\Core\InboxController;
 use Behin\SimpleWorkflow\Controllers\Core\ProcessController;
@@ -126,10 +125,6 @@ Route::name('simpleWorkflow.')->prefix('workflow')->middleware(['web', 'auth'])-
     Route::post('get-view-model-rows', [ViewModelController::class, 'getRows'])->name('view-model.get-rows');
     Route::post('update-view-model-record', [ViewModelController::class, 'updateRecord'])->name('view-model.update-record');
     Route::post('delete-view-model-record', [ViewModelController::class, 'deleteRecord'])->name('view-model.delete-record');
-
-    Route::name('file-uploader.')->prefix('file-uploader')->group(function(){
-        Route::post('upload', [FileUploaderController::class, 'upload'])->name('upload');
-    });
 });
 
 Route::get('workflow/process/start/{taskId}/{force?}/{redirect?}/{inDraft?}', [ ProcessController::class, 'start' ])->name('simpleWorkflow.process.start')->middleware('web');
