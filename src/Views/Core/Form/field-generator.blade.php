@@ -209,6 +209,22 @@
         'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
     ]) !!}
 @endif
+
+@if ($fieldDetails->type == 'file-uploader')
+    <link href="{{ asset('vendor/form-builder/css/file-uploader-field.css') }}" rel="stylesheet">
+    {!! Form::fileUploader($fieldId, [
+        'value' => $fieldValue ?? '',
+        'class' => 'form-control',
+        'id' => $fieldId,
+        'placeholder' => $fieldAttributes?->placeholder,
+        'required' => $required,
+        'readonly' => $readOnly,
+        'upload_url' => route('simpleWorkflow.file-uploader.upload'),
+        'accepted_files' => isset($fieldAttributes->accepted_files) ? $fieldAttributes->accepted_files : '*',
+        'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
+        'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
+    ]) !!}
+@endif
 @if ($fieldDetails->type == 'signature')
     {!! Form::signature($fieldId, [
         'value' => $fieldValue,
