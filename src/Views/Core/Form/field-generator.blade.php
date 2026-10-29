@@ -225,7 +225,7 @@
             <input type="hidden" name="{{ $fieldId }}" value="">
         @endif
 
-        @if (!$readOnly)
+        @if ($readOnly != 'on')
             <div class="file-uploader-input-area mb-2">
                 <input type="file" id="{{ $fieldId }}_input" accept="{{ isset($fieldAttributes->accepted_files) ? $fieldAttributes->accepted_files : '*' }}" class="form-control {{ $required ? 'is-required' : '' }}" {{ $required ? 'required' : '' }}>
                 <button type="button" class="btn btn-primary ms-2 mt-2" onclick="startFileUpload('{{ $fieldId }}')">بارگذاری فایل</button>
