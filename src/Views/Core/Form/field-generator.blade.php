@@ -212,18 +212,113 @@
 
 @if ($fieldDetails->type == 'file-uploader')
     <link href="{{ asset('vendor/form-builder/css/file-uploader-field.css') }}" rel="stylesheet">
-    {!! Form::fileUploader($fieldId, [
-        'value' => $fieldValue ?? '',
-        'class' => 'form-control',
-        'id' => $fieldId,
-        'placeholder' => $fieldAttributes?->placeholder,
-        'required' => $required,
-        'readonly' => $readOnly,
-        'upload_url' => route('simpleWorkflow.file-uploader.upload'),
-        'accepted_files' => isset($fieldAttributes->accepted_files) ? $fieldAttributes->accepted_files : '*',
-        'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
-        'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
-    ]) !!}
+    <div class="file-uploader-field" id="{{ $fieldId }}_wrapper" style="{{ isset($fieldAttributes?->style) ? $fieldAttributes?->style : null }}">
+        @if (!empty($fieldValue))
+            <input type="hidden" name="{{ $fieldId }}" value="{{ $fieldValue }}">
+            <div class="file-uploader-existing mb-2">
+                <span class="file-uploader-name">{{ $fieldValue }}</span>
+                @if (!$readOnly)
+                    <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeFileUploader('{{ $fieldId }}')">حذف فایل</button>
+                @endif
+            </div>
+        @else
+            <input type="hidden" name="{{ $fieldId }}" value="">
+        @endif
+
+        @if (!$readOnly)
+            <div class="file-uploader-input-area mb-2">
+                <input type="file" id="{{ $fieldId }}_input" accept="{{ isset($fieldAttributes->accepted_files) ? $fieldAttributes->accepted_files : '*' }}" class="form-control {{ $required ? 'is-required' : '' }}" {{ $required ? 'required' : '' }}>
+                <button type="button" class="btn btn-primary ms-2 mt-2" onclick="startFileUpload('{{ $fieldId }}')">بارگذاری فایل</button>
+            </div>
+        @endif
+
+        <div id="{{ $fieldId }}_progress" class="progress" style="display:none; height: 6px; margin-top: 8px;">
+            <div id="{{ $fieldId }}_bar" class="progress-bar bg-primary" role="progressbar" style="width: 0%"></div>
+        </div>
+        <div id="{{ $fieldId }}_msg" class="mt-2"></div>
+    </div>
+
+    <script>
+    function startFileUpload(fieldId) {
+        var input = document.getElementById(fieldId + '_input');
+        var progress = document.getElementById(fieldId + '_progress');
+        var bar = document.getElementById(fieldId + '_bar');
+        var msg = document.getElementById(fieldId + '_msg');
+
+        if (!input || !input.files.length) {
+            msg.innerHTML = '<span class="text-danger">لطفاً فایلی انتخاب کنید.</span>';
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('file', input.files[0]);
+
+        progress.style.display = 'block';
+        bar.style.width = '0%';
+        msg.innerHTML = '';
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '{{ route('simpleWorkflow.file-uploader.upload') }}', true);
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+                var pct = Math.round((e.loaded / e.total) * 100);
+                bar.style.width = pct + '%';
+            }
+        };
+
+        xhr.onload = function() {
+            progress.style.display = 'none';
+            if (xhr.status === 200) {
+                try {
+                    var res = JSON.parse(xhr.responseText);
+                    if (res.url) {
+                        var hidden = document.querySelector('input[name="' + fieldId + '"]');
+                        if (hidden) hidden.value = res.url;
+                        var wrapper = document.getElementById(fieldId + '_wrapper');
+                        var existing = wrapper.querySelector('.file-uploader-existing');
+                        if (existing) existing.remove();
+                        var html = '<div class="file-uploader-existing mb-2">' +
+                            '<span class="file-uploader-name">' + res.url + '</span>' +
+                            '<button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeFileUploader(\'' + fieldId + '\')">حذف فایل</button>' +
+                            '</div>';
+                        wrapper.insertAdjacentHTML('afterbegin', html);
+                        input.style.display = 'none';
+                        msg.innerHTML = '<span class="text-success">فایل با موفقیت بارگذاری شد.</span>';
+                    } else {
+                        msg.innerHTML = '<span class="text-danger">خطا در بارگذاری فایل.</span>';
+                    }
+                } catch (e) {
+                    msg.innerHTML = '<span class="text-danger">پاسخ نامعتبر از سرور.</span>';
+                }
+            } else {
+                msg.innerHTML = '<span class="text-danger">خطا در بارگذاری فایل (کد ' + xhr.status + ').</span>';
+            }
+        };
+
+        xhr.onerror = function() {
+            progress.style.display = 'none';
+            msg.innerHTML = '<span class="text-danger">خطا در برقراری اتصال با سرور.</span>';
+        };
+
+        xhr.send(formData);
+    }
+
+    function removeFileUploader(fieldId) {
+        var hidden = document.querySelector('input[name="' + fieldId + '"]');
+        if (hidden) hidden.value = '';
+        var existing = document.querySelector('#' + fieldId + '_wrapper .file-uploader-existing');
+        if (existing) existing.remove();
+        var input = document.getElementById(fieldId + '_input');
+        if (input) {
+            input.style.display = 'block';
+            input.value = '';
+        }
+        var msg = document.getElementById(fieldId + '_msg');
+        if (msg) msg.innerHTML = '';
+    }
+    </script>
 @endif
 @if ($fieldDetails->type == 'signature')
     {!! Form::signature($fieldId, [
