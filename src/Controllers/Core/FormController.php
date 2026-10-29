@@ -110,10 +110,24 @@ class FormController extends Controller
     public function updateContent(Request $request){
 
         $form = self::getById($request->formId);
-        $form->content = $request->content;
+
+        $content = $request->content;
+        if (!is_string($content) || trim($content) === '') {
+            return redirect()->back()->withErrors([
+                'content' => trans('Content cannot be empty.')
+            ])->withInput();
+        }
+        $decoded = json_decode($content, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return redirect()->back()->withErrors([
+                'content' => trans('Invalid JSON content. Please fix the errors before saving.')
+            ])->withInput();
+        }
+
+        $form->content = $content;
         $form->name = $request->name;
         $form->save();
-        return redirect()->back();
+        return redirect()->back()->with('success', trans('Form content updated successfully.'));
     }
 
     public function editScript($id){
