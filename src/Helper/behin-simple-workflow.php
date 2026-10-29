@@ -117,6 +117,7 @@ if(!function_exists('toJalali')){
             $jDate = Jalalian::fromCarbon($date);
             return $jDate;
         }catch(Exception $e){
+            Log::error("function toJalali Error: " . $e->getMessage());
             return $date;
         }
         
