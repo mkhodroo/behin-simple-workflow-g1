@@ -222,7 +222,7 @@
                 @endif
             </div>
         @else
-            <input type="hidden" name="{{ $fieldId }}" value="">
+            <input type="hidden" name="{{ $fieldId }}" id="{{ $fieldId }}" value="">
         @endif
 
         @if ($readOnly != 'on')
