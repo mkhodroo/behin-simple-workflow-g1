@@ -233,7 +233,7 @@
         @endif
 
         <div id="{{ $fieldId }}_progress" class="progress" style="display:none; height: 6px; margin-top: 8px;">
-            <div id="{{ $fieldId }}_bar" class="progress-bar bg-primary" role="progressbar" style="width: 0%"></div>
+            <div id="{{ $fieldId }}_bar" class="progress-bar bg-primary" role="progressbar" style="height: 5px;width: 0%"></div>
         </div>
         <div id="{{ $fieldId }}_msg" class="mt-2"></div>
     </div>
