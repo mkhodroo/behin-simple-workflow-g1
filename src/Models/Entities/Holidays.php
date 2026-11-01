@@ -6,6 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
  class Holidays extends Model 
 { 
+    use SoftDeletes; 
+    public $incrementing = false; 
+    protected $keyType = 'string'; 
     public $table = 'wf_entity_holidays'; 
-    protected $fillable = ['date', 'description', ]; 
+    protected $fillable = ['date', 'description',  'created_by', 'updated_by', 'contributers', ]; 
+protected static function boot()
+        {
+            parent::boot();
+
+            static::creating(function ($model) {
+                $model->id = $model->id ?? substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);
+            });
+        }
 }

@@ -13,7 +13,7 @@ use Behin\SimpleWorkflow\Models\Core\Cases;
     public $incrementing = false; 
     protected $keyType = 'string'; 
     public $table = 'wf_entity_part_reports'; 
-    protected $fillable = ['case_id', 'case_number', 'fix_report', 'done_at', 'repair_duration', 'see_the_problem', 'registered_by', 'part_id', 'other_parts', 'special_parts', 'power', 'inbox_id',  'created_by', 'updated_by', 'contributers', ]; 
+    protected $fillable = ['case_id', 'case_number', 'fix_report', 'done_at', 'repair_duration', 'see_the_problem', 'registered_by', 'part_id', 'other_parts', 'special_parts', 'power', 'inbox_id', 'done_at_string', 'done_at_string_alt',  'created_by', 'updated_by', 'contributers', ]; 
 protected static function boot()
         {
             parent::boot();
@@ -32,4 +32,9 @@ function part(){
 
 function mapaExpert(){
     return getUserInfo($this->registered_by);
+}
+
+function formattedDateAt(){
+    $date = (int) $this->done_at;
+    return toJalali($date);
 }}

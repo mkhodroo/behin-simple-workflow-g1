@@ -7,7 +7,7 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController; use Illuminate\Dat
     public $incrementing = false; 
     protected $keyType = 'string'; 
     public $table = 'wf_entity_case_extra_docs'; 
-    protected $fillable = ['case_id', 'case_number', 'file', 'name',  'created_by', 'updated_by', 'contributers', ]; 
+    protected $fillable = ['case_id', 'case_number', 'file', 'name', 'public_show',  'created_by', 'updated_by', 'contributers', ]; 
 protected static function boot()
         {
             parent::boot();
@@ -16,4 +16,16 @@ protected static function boot()
                 $model->id = $model->id ?? substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);
             });
         }
-}
+function fileLink(){
+    $s = '';
+    if($this->file){
+        if(str_contains($this->file, 'http')){
+            $s .= '<a href="' . $this->file . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
+        }else{
+            $s .= '<a href="' . url($this->file) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
+        }
+    }else{
+        $s .= 'فایل یافت نشد';
+    }
+    return $s;
+}}

@@ -58,14 +58,24 @@ class CaseController extends Controller
         if (config('workflow.caseNumberingPerCategory')) {
             $category = ProcessController::getById($processId)?->category;
             $processIds = Process::where('category', $category)->pluck('id');
-            $lastNumber = Cases::whereIn('process_id', $processIds)->orderByRaw('CAST(number AS UNSIGNED) DESC')->first()?->number;
+            $lastNumber = Cases::whereIn('process_id', $processIds)
+                ->whereRaw("number REGEXP '^[0-9]+$'")
+                ->orderByRaw('CAST(number AS UNSIGNED) DESC')
+                ->value('number');
         }
         elseif(config('workflow.caseNumberingPerProcess')){
-            $lastNumber = Cases::where('process_id', $processId)->orderByRaw('CAST(number AS UNSIGNED) DESC')->first()?->number;
+            $lastNumber = Cases::where('process_id', $processId)
+                ->whereRaw("number REGEXP '^[0-9]+$'")
+                ->orderByRaw('CAST(number AS UNSIGNED) DESC')
+                ->value('number');
         }else{
-            $lastNumber = Cases::orderByRaw('CAST(number AS UNSIGNED) DESC')->first()?->number;
+            $lastNumber = Cases::whereRaw("number REGEXP '^[0-9]+$'")
+                ->orderByRaw('CAST(number AS UNSIGNED) DESC')
+                ->value('number');
         }
-        $newNumber = $lastNumber ? $lastNumber + 1 : config('workflow.caseStartValue');
+        $newNumber = $lastNumber !== null
+            ? (int) $lastNumber + 1
+            : (int) config('workflow.caseStartValue', 1000);
         return $newNumber;
     }
 

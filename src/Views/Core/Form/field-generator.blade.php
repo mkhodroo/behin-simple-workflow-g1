@@ -2,7 +2,7 @@
     $fieldLabel = trans('SimpleWorkflowLang::fields.' . $fieldName);
     $fieldDetails = getFieldDetailsByName($fieldName);
     if ($fieldDetails) {
-        $fieldAttributes = json_decode($fieldDetails->attributes);
+        $fieldAttributes = json_decode($fieldDetails->attributes ?? '');
     }
     $fieldType = isset($fieldDetails->type) ? $fieldDetails->type : null;
     $fieldStyle = isset($fieldAttributes->style) ? $fieldAttributes->style : null;
@@ -165,7 +165,7 @@
 @endif
 @if ($fieldDetails->type == 'select-multiple')
     {!! Form::selectMultiple($fieldId, is_string($fieldAttributes?->options) ? $fieldAttributes?->options : null, [
-        'value' => json_decode($fieldValue),
+        'value' => json_decode($fieldValue ?? ''),
         'query' => is_string($fieldAttributes?->query) ? $fieldAttributes?->query : null,
         'class' => 'form-control',
         'id' => $fieldId,

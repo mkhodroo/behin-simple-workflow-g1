@@ -3,7 +3,7 @@
 @section('title', $form->name)
 
 @php
-    $content = json_decode($form->content);
+    $content = json_decode($form->content ?? '');
 @endphp
 
 @section('content')
