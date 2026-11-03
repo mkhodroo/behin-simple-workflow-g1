@@ -4,7 +4,7 @@
 <div class="container table-responsive">
     <div class="row">
         <div class="col-md-12">
-            <h3>{{ trans('fields.Start Process') }}</h3>
+            <h3>شروع فرایند</h3>
             <hr>
         </div>
     </div>
@@ -21,10 +21,10 @@
                         class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{{ $process->name }}</h5>
-                            <small>{{ trans('fields.Start') }}</small>
+                            <small>شروع</small>
                         </div>
                         <p class="mb-1">{{ $process->description }}</p>
-                        <small>{{ trans('fields.Start from task') }}: {{ $process->task->name }}</small>
+                        <small>شروع از مرحله: {{ $process->task->name }}</small>
                     </a>
                 @endforeach
             </div>

@@ -50,7 +50,7 @@ class ProcessController extends Controller
         return redirect()->route('simpleWorkflow.process.index');
     }
 
-    public static function getById($id): Process
+    public static function getById($id): ?Process
     {
         return Process::find($id);
     }
@@ -65,16 +65,32 @@ class ProcessController extends Controller
         $userId = $userId ? $userId : Auth::id();
         $processes = self::getAll();
         $ar = [];
+        $seenStartTasks = [];
         foreach($processes as $process)
         {
             $startTasks = TaskController::getProcessStartTasks($process->id, false);
             foreach($startTasks as $startTask)
             {
+                if ($startTask->type === 'form') {
+                    $startForm = $startTask->executive_element_id
+                        ? FormController::getById($startTask->executive_element_id)
+                        : null;
+                    if (!$startForm || !$startForm->content) {
+                        continue;
+                    }
+                }
+
                 $result = TaskActorController::userIsAssignToTask($startTask->id, $userId);
                 if($result)
                 {
-                    $process->task = $startTask;
-                    $ar[] = $process;
+                    $taskKey = $process->id . ':' . $startTask->id;
+                    if (isset($seenStartTasks[$taskKey])) {
+                        continue;
+                    }
+                    $seenStartTasks[$taskKey] = true;
+                    $processForStart = clone $process;
+                    $processForStart->task = $startTask;
+                    $ar[] = $processForStart;
                 }
             }
         }
@@ -154,7 +170,7 @@ class ProcessController extends Controller
         return $hasError;
     }
 
-    public static function startFromScript($taskId, $creator, $caseNumber = null, $parentId){
+    public static function startFromScript($taskId, $creator, $caseNumber = null, $parentId = null){
         return self::start($taskId, true, false, false, $caseNumber, $creator, $parentId);
     }
 

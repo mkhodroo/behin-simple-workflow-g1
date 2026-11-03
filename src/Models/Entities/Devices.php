@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
  class Devices extends Model 
 { 
+    use SoftDeletes; 
     public $incrementing = false; 
     protected $keyType = 'string'; 
     public $table = 'wf_entity_devices'; 
-    protected $fillable = ['case_id', 'case_number', 'name', 'model', 'control_system', 'control_system_model', 'serial', 'has_electrical_map', 'mapa_serial', 'mapa_expert_head', 'repair_is_approved', 'dispatched_expert_needed', 'dispatched_expert', 'mapa_expert_companions', ]; 
+    protected $fillable = ['case_id', 'case_number', 'name', 'model', 'control_system', 'control_system_model', 'serial', 'has_electrical_map', 'mapa_serial', 'mapa_expert_head', 'repair_is_approved', 'dispatched_expert_needed', 'dispatched_expert', 'mapa_expert_companions',  'created_by', 'updated_by', 'contributers', ]; 
 protected static function boot()
         {
             parent::boot();

@@ -7,7 +7,7 @@ use Behin\SimpleWorkflow\Controllers\Core\VariableController; use Illuminate\Dat
     public $incrementing = false; 
     protected $keyType = 'string'; 
     public $table = 'wf_entity_financial_transactions'; 
-    protected $fillable = ['case_id', 'case_number', 'financial_type', 'financial_method', 'counterparty_id', 'counterparty_name', 'amount', 'description', 'invoice_or_cheque_number', 'transaction_or_cheque_due_date', 'destination_account_name', 'destination_account_number', 'transaction_or_cheque_due_date_alt', 'is_passed', 'destination_account_id', 'auto_financial_transaction_id', 'official_office', 'invoice_issued', 'invoice_received', 'invoice_type',  'created_by', 'updated_by', 'contributers', ]; 
+    protected $fillable = ['case_id', 'case_number', 'financial_type', 'financial_method', 'counterparty_id', 'counterparty_name', 'amount', 'description', 'invoice_or_cheque_number', 'transaction_or_cheque_due_date', 'destination_account_name', 'destination_account_number', 'transaction_or_cheque_due_date_alt', 'is_passed', 'destination_account_id', 'auto_financial_transaction_id', 'official_office', 'invoice_issued', 'invoice_received', 'invoice_type', 'invoice_category', 'file',  'created_by', 'updated_by', 'contributers', ]; 
 protected static function boot()
         {
             parent::boot();
@@ -22,4 +22,22 @@ function counterparty(){
 
 function amount(){
     return number_format($this->amount);
+}
+
+function fileLink(){
+    $s = '';
+    if($this->file){
+        if(str_contains($this->file, 'http')){
+            $s .= '<a href="' . $this->file . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
+        }else{
+            $s .= '<a href="' . url($this->file) . '" target="_blank" download>' . trans('fields.Download') . '</a><br>';
+        }
+    }else{
+        $s .= 'فایل یافت نشد';
+    }
+    return $s;
+}
+
+function destinationAccount(){
+    return Counter_parties::find($this->destination_account_id)?->name ?? '';
 }}
