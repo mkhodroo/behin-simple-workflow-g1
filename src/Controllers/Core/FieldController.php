@@ -36,18 +36,32 @@ class FieldController extends Controller
             'query' => 'nullable|string',
             'placeholder' => 'nullable|string',
         ]);
-        // $attributes = [
-        //     'query' => $request->input('query') ? $request->input('query') : null,
-        //     'placeholder' => $request->placeholder,
-        //     'style' => $request->style,
-        //     'script' => $request->script,
-        //     'datalist_from_database' => $request->datalist_from_database
-        // ];
+        
+        $attributes = [
+            'query' => $request->input('query') ? $request->input('query') : null,
+            'placeholder' => $request->placeholder,
+            'options' => $request->options ? $request->options : null,
+            'style' => $request->style,
+            'script' => $request->script,
+            'datalist_from_database' => $request->datalist_from_database,
+            'view_model_id' => $request->view_model_id,
+            'view_model_version' => $request->view_model_version ?? 'v1',
+            'endpoint' => $request->endpoint,
+            'minChars' => $request->minChars,
+            'limit' => $request->limit,
+            'initial_label' => $request->initial_label,
+        ];
+        if ($request->columns !== null) {
+            $attributes['columns'] = $request->columns;
+        }
+        if ($request->id !== null) {
+            $attributes['id'] = $request->id;
+        }
 
         Fields::create([
             'name' => $request->name,
             'type' => $request->type,
-            'attributes' => null //json_encode($attributes)
+            'attributes' => json_encode($attributes)
         ]);
 
         return redirect()->route('simpleWorkflow.fields.index', ['#createForm'])->with('success', 'Fields created successfully.');
@@ -70,6 +84,7 @@ class FieldController extends Controller
             'script' => $request->script,
             'datalist_from_database' => $request->datalist_from_database,
             'view_model_id' => $request->view_model_id,
+            'view_model_version' => $request->view_model_version ?? 'v1',
             'endpoint' => $request->endpoint,
             'minChars' => $request->minChars,
             'limit' => $request->limit,
