@@ -65,6 +65,7 @@ class RoutingController extends Controller
                     $value = json_encode($value);
                 }
                 VariableController::save($processId, $caseId, $key, $value);
+                Log::info("$key: $value");
             }
         }
         foreach ($requiredFields as $field) {
