@@ -46,6 +46,7 @@ class RoutingController extends Controller
             'processId' => 'required',
             'caseId' => 'required',
         ]);
+        Log::info($request->all());
         $processId = $request->processId;
         $caseId = $request->caseId;
         $taskId = $request->taskId;
