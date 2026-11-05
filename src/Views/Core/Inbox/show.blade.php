@@ -129,7 +129,7 @@
         function saveForm() {
             var form = $('#form')[0];
             var fd = new FormData(form);
-            console.log([...fd.entries()]);
+            // console.log([...fd.entries()]);
             send_ajax_formdata_request(
                 '{{ route('simpleWorkflow.routing.save') }}',
                 fd,
