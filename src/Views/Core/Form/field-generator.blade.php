@@ -360,7 +360,6 @@
         'class' => $fieldClass,
         'id' => $fieldId,
         'view_model_id' => $fieldAttributes?->view_model_id,
-        'view_model_version' => $fieldAttributes?->view_model_version ?? 'v1',
         'style' => isset($fieldAttributes?->style) ? $fieldAttributes?->style : null,
         'script' => isset($fieldAttributes?->script) ? $fieldAttributes?->script : null,
     ]) !!}

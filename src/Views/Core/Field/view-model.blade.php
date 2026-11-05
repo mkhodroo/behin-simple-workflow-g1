@@ -15,14 +15,6 @@
             @endforeach
         </select>
     </div>
-    
-    <div class="col-sm-6">
-        <label for="view_model_version" class="form-label">{{ trans('View Model Version') }}</label>
-        <select name="view_model_version" id="view_model_version" class="form-select form-control">
-            <option value="v1" @if (($attributes?->view_model_version ?? 'v1') == 'v1') selected @endif>{{ trans('Version 1 (HTML Response)') }}</option>
-            <option value="v2" @if (($attributes?->view_model_version ?? 'v1') == 'v2') selected @endif>{{ trans('Version 2 (JSON Response with Pagination)') }}</option>
-        </select>
-    </div>
 </div>
 
 {!! Form::textarea('style', [
