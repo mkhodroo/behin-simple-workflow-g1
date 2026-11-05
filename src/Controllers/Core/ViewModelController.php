@@ -330,6 +330,7 @@ class ViewModelController extends Controller
         } catch (Exception $e) {
             return $e->getMessage();
         }
+    }
 
     public function getRowsV2(Request $request)
     {
@@ -441,9 +442,6 @@ class ViewModelController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
-
-    public static function updateRecord(Request $request)
     }
 
     public static function updateRecord(Request $request)
