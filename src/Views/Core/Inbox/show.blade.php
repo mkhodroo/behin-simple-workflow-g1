@@ -129,15 +129,7 @@
         function saveForm() {
             var form = $('#form')[0];
             var fd = new FormData(form);
-            console.log('All selected values:', 
-        $('select[name="mapa_expert_companions[]"]').val()
-    );
-
-    console.log('FormData entries:',
-        [...fd.entries()].filter(x =>
-            x[0].includes('mapa_expert_companions')
-        )
-    );
+            console.log([...fd.entries()]);
             send_ajax_formdata_request(
                 '{{ route('simpleWorkflow.routing.save') }}',
                 fd,
