@@ -195,10 +195,6 @@ class ViewModelController extends Controller
     public function getRows(Request $request)
     {
         try {
-            Log::info('getRows called', [
-                'method' => $request->method(),
-                'viewModel_id' => $request->input('viewModel_id'),
-            ]);
             // $inbox = InboxController::getById($request->inbox_id);
             $case = CaseController::getById($request->case_id);
             $viewModel = self::getById($request->viewModel_id);
