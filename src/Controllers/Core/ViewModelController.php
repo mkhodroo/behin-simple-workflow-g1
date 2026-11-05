@@ -259,7 +259,7 @@ class ViewModelController extends Controller
                 if ($viewModel->script_before_show_rows) {
                     $request->merge(['rows' => $rows]);
                     $rows = ScriptController::runFromView($request, $viewModel->script_before_show_rows);
-                    Log::info($rows);
+                    // Log::info($rows);
                 }
 
                 foreach ($rows as $row) {
