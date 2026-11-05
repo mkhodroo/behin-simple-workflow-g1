@@ -46,18 +46,6 @@ class RoutingController extends Controller
             'processId' => 'required',
             'caseId' => 'required',
         ]);
-        Log::info('CONTENT TYPE', [
-    'content_type' => $_SERVER['CONTENT_TYPE'] ?? null,
-]);
-
-Log::info('PHP POST', $_POST);
-
-Log::info('REQUEST ALL', $request->all());
-
-Log::info('REQUEST INPUT', [
-    'companions' => $request->input('mapa_expert_companions'),
-    'companions_bracket' => $request->input('mapa_expert_companions[]'),
-]);
         $processId = $request->processId;
         $caseId = $request->caseId;
         $taskId = $request->taskId;
