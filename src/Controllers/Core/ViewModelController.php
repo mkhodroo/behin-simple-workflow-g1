@@ -330,6 +330,120 @@ class ViewModelController extends Controller
         } catch (Exception $e) {
             return $e->getMessage();
         }
+
+    public function getRowsV2(Request $request)
+    {
+        try {
+            $viewModel = self::getById($request->viewModel_id);
+
+            if ($viewModel->api_key != $request->api_key) {
+                return response()->json(['error' => trans("fields.Api key is not valid")], 403);
+            }
+
+            $columns = explode(',', $viewModel->default_fields);
+            $perPage = max((int) $request->input('per_page', 10), 1);
+            $page = max((int) $request->input('page', 1), 1);
+            $search = $request->input('search', '');
+
+            // ✅ تبدیل ایمن به آرایه
+            $readCondition = is_array($viewModel->which_rows_user_can_read)
+                ? $viewModel->which_rows_user_can_read
+                : json_decode($viewModel->which_rows_user_can_read, true) ?? [];
+
+            $model = self::getModelById($viewModel->id);
+
+            // ✅ شروع Build Query
+            $query = $model::query();
+
+            if ($viewModel->show_rows_based_on == 'case_id') {
+                $case = CaseController::getById($request->case_id);
+                $query->where('case_id', $case->id);
+            } elseif ($viewModel->show_rows_based_on == 'case_number') {
+                $case = CaseController::getById($request->case_id);
+                $query->where('case_number', $case->number);
+            } else {
+                $query->whereNull('deleted_at');
+            }
+
+            // ✅ فیلتر دسترس‌پذیری
+            if (!empty($readCondition)) {
+                $query->where(function ($q) use ($readCondition) {
+                    if (in_array('all', $readCondition)) {
+                        // $q->orWhereNotNull('deleted_at');
+                    }
+                    if (in_array('user-created-it', $readCondition)) {
+                        $q->orWhere('created_by', Auth::id());
+                    }
+                    if (in_array('user-contributed-it', $readCondition)) {
+                        $q->orWhereRaw('FIND_IN_SET(?, contributers)', [Auth::id()]);
+                    }
+                    if (in_array('user-updated-it', $readCondition)) {
+                        $q->orWhere('updated_by', Auth::id());
+                    }
+                });
+            }
+
+            // ✅ جست‌وجو
+            if ($search !== '' && !empty($columns)) {
+                $query->where(function ($q) use ($columns, $search) {
+                    foreach ($columns as $column) {
+                        $column = trim($column);
+                        if ($column === '') continue;
+                        $q->orWhere($column, 'like', '%' . $search . '%');
+                    }
+                });
+            }
+
+            // ✅ صفحه‌بندی
+            $total = $query->count();
+            $rows = $query->orderBy('updated_at', 'desc')
+                ->skip(($page - 1) * $perPage)
+                ->take($perPage)
+                ->get();
+
+            // ✅ پرچیدن هر رکورد
+            $rows->each(function ($row) use ($viewModel) {
+                $row->show_as = $viewModel->show_as;
+            });
+
+            // ✅ ساخت HTML ردیف‌ها
+            $rowsHtml = '';
+            foreach ($rows as $row) {
+                if ($row->show_as == 'table') {
+                    $rowsHtml .= "<tr>";
+                    foreach ($columns as $column) {
+                        $column = trim($column);
+                        if ($column === '') continue;
+                        try {
+                            $value = $row->$column ?? null;
+                            $rowsHtml .= "<td>" . e($value) . "</td>";
+                        } catch (\Throwable $e) {
+                            $rowsHtml .= "<td>" . e($e->getMessage()) . "</td>";
+                        }
+                    }
+                    $rowsHtml .= "<td></td>";
+                    $rowsHtml .= "</tr>";
+                }
+            }
+
+            // ✅ metadata مربوط به pagination
+            $response = [
+                'rows' => $rowsHtml,
+                'meta' => [
+                    'total' => $total,
+                    'per_page' => $perPage,
+                    'current_page' => $page,
+                    'last_page' => (int) ceil($total / $perPage),
+                ],
+            ];
+
+            return response()->json($response);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public static function updateRecord(Request $request)
     }
 
     public static function updateRecord(Request $request)
