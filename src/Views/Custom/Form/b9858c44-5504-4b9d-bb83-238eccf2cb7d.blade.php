@@ -27,7 +27,6 @@
                         id="requested_quantity" placeholder="" required="" style="">
                 </div>
             </div>
-        </div>
     @elseif($consumablePart->consumable_part_status == 'تایید')
         <div class="row col-sm-12 p-0 m-0 dynamic-form" id="b9858c44-5504-4b9d-bb83-238eccf2cb7d">
 
@@ -79,6 +78,18 @@
                     inputmode="numeric" pattern="[0-9]*" value="" id="requested_quantity" placeholder=""
                     required="" style="">
             </div>
+        </div>
+
+        <div class="col-sm-4">
+            @include('SimpleWorkflowView::Core.Form.field-generator', [
+                'fieldName' => "product_sample_image",
+                'fieldId' => "product_sample_image",
+                'fieldClass' => "col-sm-4",
+                'readOnly' => false,
+                'required' => false,
+                'fieldValue' => '',
+                'fieldValueAlt' => '',
+            ])
         </div>
     </div>
 @endif
