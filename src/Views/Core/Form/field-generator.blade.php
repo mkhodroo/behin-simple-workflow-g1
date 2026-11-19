@@ -216,7 +216,9 @@
         @if (!empty($fieldValue))
             <input type="hidden" name="{{ $fieldId }}" value="{{ $fieldValue }}">
             <div class="file-uploader-existing mb-2">
-                <span class="file-uploader-name">{{ $fieldValue }}</span>
+                <span class="file-uploader-name">
+                    <a href="{{ $fieldValue }}" target="_blank" download>دانلود</a>
+                </span>
                 @if (!$readOnly)
                     <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeFileUploader('{{ $fieldId }}')">حذف فایل</button>
                 @endif
