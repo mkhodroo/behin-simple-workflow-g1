@@ -56,7 +56,7 @@
                         <label for="type" class="form-label">{{ trans('Type') }}</label>
                         <select name="type" id="type" class="form-select">
                             @foreach ([
-                                'string', 'number', 'formatted-digit', 'text', 'date', 'time', 'datetime',
+                                'string', 'number', 'formatted-digit', 'text', 'date', 'time', 'datetime', 'datetime2',
                                 'select', 'select-multiple', 'select-simple', 'searchable-input', 'file', 'file-uploader', 'checkbox', 'radio',
                                 'location', 'signature', 'entity', 'title', 'div', 'button',
                                 'help', 'hidden', 'view-model'
