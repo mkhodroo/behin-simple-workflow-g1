@@ -280,7 +280,9 @@
                         var existing = wrapper.querySelector('.file-uploader-existing');
                         if (existing) existing.remove();
                         var html = '<div class="file-uploader-existing mb-2">' +
-                            '<span class="file-uploader-name">' + res.url + '</span>' +
+                            '<a href="' + res.url + '" class="file-uploader-name" target="_blank" download>' +
+                                'دانلود فایل: ' + res.url.split('/').pop() +
+                            '</a>' +
                             '<button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeFileUploader(\'' + fieldId + '\')">حذف فایل</button>' +
                             '</div>';
                         wrapper.insertAdjacentHTML('afterbegin', html);
