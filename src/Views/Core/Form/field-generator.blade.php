@@ -213,7 +213,7 @@
 @if ($fieldDetails->type == 'file-uploader')
     <link href="{{ asset('vendor/form-builder/css/file-uploader-field.css') }}" rel="stylesheet">
     <div class="file-uploader-field" id="{{ $fieldId }}_wrapper" style="{{ isset($fieldAttributes?->style) ? $fieldAttributes?->style : null }}">
-        <label for="{{ $fieldId }}_input">{{ $fieldDetails->label ?? '' }}</label>
+        <label for="{{ $fieldId }}_input">{{ $fieldName ?? '' }}</label>
         @if (!empty($fieldValue))
             <input type="hidden" name="{{ $fieldId }}" value="{{ $fieldValue }}">
             <div class="file-uploader-existing mb-2">
